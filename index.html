@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Global Finance Hub | Loumiti Mouhammed</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { 
+            background: #050505; 
+            color: #fff; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px; 
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* حاوية الأيقونات المتحركة */
+        .bg-icons {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .icon {
+            position: absolute;
+            color: rgba(247, 147, 26, 0.05);
+            font-size: 50px;
+            animation: move linear infinite;
+        }
+        @keyframes move {
+            from { transform: translateY(100vh); }
+            to { transform: translateY(-10vh); }
+        }
+
+        .converter, .chart-container { 
+            background: rgba(18, 18, 18, 0.9); 
+            padding: 30px; 
+            border-radius: 20px; 
+            width: 90%; 
+            max-width: 500px; 
+            border: 1px solid #333; 
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+        select, input { width: 100%; padding: 12px; margin: 10px 0; background: #1e1e1e; border: 1px solid #444; color: #fff; border-radius: 8px; outline: none; }
+        button { width: 100%; padding: 12px; background: linear-gradient(135deg, #f7931a, #d67b0d); border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { filter: brightness(1.2); }
+        canvas { max-height: 250px; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-icons" id="bgIcons"></div>
+
+    <div class="converter">
+        <h2>Global Asset Converter</h2>
+        <input type="number" id="amount" placeholder="Amount">
+        <select id="assetType">
+            <option value="BTC">Bitcoin (BTC)</option>
+            <option value="GOLD">Gold (1g)</option>
+        </select>
+        <select id="currency">
+            <option value="USD">USD - US Dollar</option>
+            <option value="MAD">MAD - Moroccan Dirham</option>
+            <option value="EGP">EGP - Egyptian Pound</option>
+            <option value="SAR">SAR - Saudi Riyal</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+        </select>
+        <button onclick="calculate()">CALCULATE</button>
+        <h3 id="result">Result: --</h3>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="priceChart"></canvas>
+    </div>
+
+    <script>
+        // كود الأيقونات المتحركة
+        const bgIcons = document.getElementById('bgIcons');
+        for(let i=0; i<15; i++) {
+            const div = document.createElement('div');
+            div.innerHTML = '₿';
+            div.className = 'icon';
+            div.style.left = Math.random() * 100 + '%';
+            div.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            bgIcons.appendChild(div);
+        }
+
+        // كود المبيان
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Gold Price Trend (USD/g)',
+                    data: [62, 63, 65, 64, 67, 69],
+                    borderColor: '#f7931a',
+                    backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                    fill: true
+                }]
+            }
+        });
+
+        function calculate() {
+            const val = document.getElementById('amount').value;
+            const asset = document.getElementById('assetType').value;
+            const rate = asset === 'BTC' ? 65000 : 70;
+            document.getElementById('result').innerText = `Result: ${(val * rate).toLocaleString()} ${document.getElementById('currency').value}`;
+        }
+    </script>
+</body>
+</html>
